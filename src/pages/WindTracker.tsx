@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { STATIONS, degToCardinal, recommendGear, useWindTracker } from "@/hooks/useWindTracker";
 import { toast } from "@/hooks/use-toast";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -146,7 +147,7 @@ export default function WindTracker() {
         </Card>
       </section>
 
-      <section className="container grid gap-6 md:grid-cols-3 my-8">
+      <section className="container grid gap-6 my-8">
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><Timer className="size-4" /> ETA Prediction</CardTitle>
@@ -163,19 +164,40 @@ export default function WindTracker() {
             <p className="text-sm text-muted-foreground">Calculated from current wind and recent trend. This is an estimate and may vary with local effects.</p>
           </CardContent>
         </Card>
+      </section>
 
+      <section className="container my-8">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2"><Bell className="size-4" /> Gear Suggestion</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Bell className="size-4" /> Gear Recommendations</CardTitle>
+            <p className="text-sm text-muted-foreground">Equipment suggestions based on {refSpeed.toFixed(1)} m/s wind speed</p>
           </CardHeader>
-          <CardContent className="grid gap-2">
-            <div className="text-sm text-muted-foreground">Based on {weight} kg rider and {refSpeed.toFixed(1)} m/s wind</div>
-            <Separator />
-            <div className="grid gap-1">
-              <div className="flex justify-between"><span>Board width</span><span className="font-medium">{gear.boardWidthCm} cm</span></div>
-              <div className="flex justify-between"><span>Sail</span><span className="font-medium">{gear.sailM2} m²</span></div>
-              <div className="flex justify-between"><span>Fin</span><span className="font-medium">{gear.finCm} cm</span></div>
-            </div>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Rider Weight</TableHead>
+                  <TableHead>Board Width</TableHead>
+                  <TableHead>Sail Size</TableHead>
+                  <TableHead>Fin Size</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[55, 65, 75, 85, 95, 105].map((w) => {
+                  const g = recommendGear(w, refSpeed);
+                  const isCurrentUser = w === weight;
+                  return (
+                    <TableRow key={w} className={isCurrentUser ? "bg-primary/5" : ""}>
+                      <TableCell className="font-medium">{w} kg</TableCell>
+                      <TableCell>{g.boardWidthCm} cm</TableCell>
+                      <TableCell>{g.sailM2} m²</TableCell>
+                      <TableCell>{g.finCm} cm</TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            <p className="text-xs text-muted-foreground mt-4">Your current weight ({weight} kg) is highlighted.</p>
           </CardContent>
         </Card>
       </section>
