@@ -170,7 +170,7 @@ export default function WindTracker() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><Bell className="size-4" /> Gear Recommendations</CardTitle>
-            <p className="text-sm text-muted-foreground">Equipment suggestions based on {refSpeed.toFixed(1)} m/s wind speed</p>
+            <p className="text-sm text-muted-foreground">Equipment suggestions based on current  {refSpeed.toFixed(1)} m/s wind speed</p>
           </CardHeader>
           <CardContent>
             <Table>
