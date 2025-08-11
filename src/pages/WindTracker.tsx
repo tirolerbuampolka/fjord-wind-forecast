@@ -62,11 +62,11 @@ export default function WindTracker() {
     }
   }, [isBuildingAtDrobak, etaMinutes, lastAlertRef]);
 
-  // Update camera image every 5 minutes
+  // Update camera image every 2 minutes
   useEffect(() => {
     const interval = setInterval(() => {
       setCameraTimestamp(Date.now());
-    }, 5 * 60 * 1000); // 5 minutes
+    }, 2 * 60 * 1000); // 2 minutes
 
     return () => clearInterval(interval);
   }, []);
@@ -185,7 +185,7 @@ export default function WindTracker() {
                   }}
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Updates every 5 minutes</p>
+              <p className="text-xs text-muted-foreground mt-1">Updates every 2 minutes</p>
             </div>
           </CardContent>
         </Card>
