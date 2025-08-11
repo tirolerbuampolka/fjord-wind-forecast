@@ -46,6 +46,7 @@ export default function WindTracker() {
 
   const [apiBase, setApiBase] = useState<string>(() => localStorage.getItem("wind_api_base") || "");
   const [weight, setWeight] = useState<number>(() => Number(localStorage.getItem("wind_weight") || 85));
+  const [cameraTimestamp, setCameraTimestamp] = useState(Date.now());
 
   const { drobak, lysaker, drobakHist, lysakerHist, isBuildingAtDrobak, etaMinutes, lastAlertRef } = useWindTracker({
     baseUrl: apiBase || undefined,
@@ -60,6 +61,15 @@ export default function WindTracker() {
       });
     }
   }, [isBuildingAtDrobak, etaMinutes, lastAlertRef]);
+
+  // Update camera image every 5 minutes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCameraTimestamp(Date.now());
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(interval);
+  }, []);
 
   const refSpeed = drobak?.wind.speed ?? 6;
   const gear = useMemo(() => recommendGear(weight, refSpeed), [weight, refSpeed]);
@@ -167,7 +177,7 @@ export default function WindTracker() {
               <h3 className="text-sm font-medium mb-2">Live Camera View</h3>
               <div className="relative rounded-lg overflow-hidden border">
                 <img 
-                  src={`http://lbk.zapto.org/cgi-bin/api.cgi?cmd=Snap&channel=0&rs=wuuPhkmUCeI9WG7C&user=webcampaanett&password=lbkpasnrd&t=${Math.floor(Date.now() / 300000)}`}
+                  src={`http://lbk.zapto.org/cgi-bin/api.cgi?cmd=Snap&channel=0&rs=wuuPhkmUCeI9WG7C&user=webcampaanett&password=lbkpasnrd&t=${cameraTimestamp}`}
                   alt="Live camera view of wind conditions"
                   className="w-full h-auto max-h-64 object-cover"
                   onError={(e) => {
