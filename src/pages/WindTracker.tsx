@@ -175,12 +175,20 @@ export default function WindTracker() {
             
             <div className="mt-4">
               <h3 className="text-sm font-medium mb-2">Live Camera View</h3>
-              <div className="relative rounded-lg overflow-hidden border">
+              <div className="relative rounded-lg overflow-hidden border min-h-32 bg-muted/20 flex items-center justify-center">
                 <img 
                   src={`http://lbk.zapto.org/cgi-bin/api.cgi?cmd=Snap&channel=0&rs=wuuPhkmUCeI9WG7C&user=webcampaanett&password=lbkpasnrd&t=${cameraTimestamp}`}
                   alt="Live camera view of wind conditions"
                   className="w-full h-auto max-h-64 object-cover"
+                  onLoad={() => {
+                    console.log('Camera image loaded successfully');
+                  }}
                   onError={(e) => {
+                    console.error('Camera image failed to load:', e);
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'text-sm text-muted-foreground text-center p-4';
+                    errorDiv.textContent = 'Camera unavailable (mixed content or network issue)';
+                    e.currentTarget.parentNode?.appendChild(errorDiv);
                     e.currentTarget.style.display = 'none';
                   }}
                 />
