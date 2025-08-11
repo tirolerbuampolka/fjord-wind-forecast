@@ -162,6 +162,21 @@ export default function WindTracker() {
               <div className="text-muted-foreground">Waiting for wind to build in {STATIONS.drobak.name}…</div>
             )}
             <p className="text-sm text-muted-foreground">Calculated from current wind and recent trend. This is an estimate and may vary with local effects.</p>
+            
+            <div className="mt-4">
+              <h3 className="text-sm font-medium mb-2">Live Camera View</h3>
+              <div className="relative rounded-lg overflow-hidden border">
+                <img 
+                  src={`http://lbk.zapto.org/cgi-bin/api.cgi?cmd=Snap&channel=0&rs=wuuPhkmUCeI9WG7C&user=webcampaanett&password=lbkpasnrd&t=${Math.floor(Date.now() / 300000)}`}
+                  alt="Live camera view of wind conditions"
+                  className="w-full h-auto max-h-64 object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Updates every 5 minutes</p>
+            </div>
           </CardContent>
         </Card>
       </section>
